@@ -2,14 +2,14 @@ class Caesar
 
 	attr_accessor :input, :offset, :output
 
-	def initialize (input, offset)
+	def initialize(input, offset)
 		@input = input
 		@offset = offset
-		@output = shift_code
+		output = shift_code
 		output_code(@output)
 	end
 
-	def shift_code	
+	def shift_code
 		characters = @input.split("")
 		numbers = []
 		characters.each do |c|
@@ -29,18 +29,18 @@ class Caesar
 		end
 		output = coded_chars.join
 
-		return output
 	end
 
 	def output_code(output)
-		puts output
+#		puts output
 	end
-
 end
 
 #puts "enter phrase to encode"
-#input = gets.chomp
+#input1 = gets.chomp
 #puts "enter offset"
-#offset = gets.chomp.to_i
+#offset1 = gets.chomp.to_i
+#cipher = Caesar.new(input1, offset1)
+
 		
 #caesar = Caesar.new(input, offset)
