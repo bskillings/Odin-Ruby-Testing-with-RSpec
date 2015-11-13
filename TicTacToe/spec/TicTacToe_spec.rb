@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Game do
+describe GameBackEnd do
 	
 	it "has players" do
-		game = Game.new
+		game = GameBackEnd.new
 		has_players = false
 		if game.player_x && game.player_o
 			has_players = true

@@ -145,8 +145,3 @@ class Player
 
 end
 
-
-game = GameUI.new
-
-
-#when i move the looking to see if anyone has won out of turn it hangs at the end
