@@ -174,27 +174,45 @@ describe Enumerable do
 
 		context "if block given" do
 	
-			it "counts things that are true"
+			it "counts things that are true" do
+				my_count_test = [true, false, true].my_count{|x| x == true}
+				expect(my_count_test). to eq 2
+			end
 
 		end
 
 		context "if no block given" do
 
-			it "counts all the things!"
+			it "counts all the things!" do
+				my_count_test = [true, false, true].my_count
+				expect(my_count_test). to eq 3
+			end
 
 		end
 
 	end
 
+
+
+	#this test will pass if I enable the my_map that doesn't allow for procs
+	#but then of course procs don't work.
+	#I think it's likely that I just don't understand my_map
 	describe "#my_map" do
 
-		it "correctly maps to each element"
+		it "correctly maps to each element" do
+			my_map_test = [1, 2, 3]
+			my_map_output = my_map_test.my_map{|x| x + 1}
+			expect(my_map_output).to eq [2, 3, 4]
+		end
 
 	end
 
 	describe "#multiply_els" do
 
-		it "multiplies all the elements together"
+		it "multiplies all the elements together" do
+			multiply_els_test = [2, 4, 6].multiply_els
+			expect(multiply_els_test). to eq 48
+		end
 
 	end
 

@@ -5,7 +5,7 @@ module Enumerable
 			yield(self[i])
 			i += 1
 		end
-		self #forgot to put anything here for it to return
+		self 
 	end
 
 	def my_each_with_index
@@ -70,9 +70,6 @@ module Enumerable
 		total
 	end
 
-#NOT WORKING WITH BOTH
-
-#okay a lot of people are doing (proc=nil) as an argument and saying if proc && block_given?
 
 	def my_map(some_proc = nil)
 		results = []
@@ -86,9 +83,6 @@ module Enumerable
 		results
 	end
 
-	#okay I'll take that
-	
-
 	#This is what it looked like with blocks
 	#def my_map
 	#	results = []
@@ -99,14 +93,8 @@ module Enumerable
 	#end
 
 	def my_inject#(*start)
-		#current_index = 0
-		#result = 0
-		#if start
-		#	result = start 
-	#	else
-			result = self[0]
-			current_index = 1
-	#	end
+		result = self[0]
+		current_index = 1
 		while current_index < self.size
 			result = yield result, self[current_index]
 			current_index += 1
@@ -183,3 +171,4 @@ class Input
 	end
 
 end
+
