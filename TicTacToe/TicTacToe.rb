@@ -1,6 +1,6 @@
 class GameBackEnd
 
-	attr_accessor :player_won, :swap_player, :current_player
+	attr_accessor :player_won, :swap_player, :current_player, :player_x, :player_o, :board_status
 
 	#Setting up a new game
 	def initialize
@@ -71,7 +71,7 @@ class GameBackEnd
 
 
 	#returning strings to UI, swapping player if okay
-	def check_box?(box)
+	def check_box(box)
 		unless @board_status.keys.include?(box)
 			return "please choose a square like this\r\n1 2 3\r\n4 5 6\r\n7 8 9"
 		end
@@ -115,7 +115,7 @@ class GameUI
 			while @game.swap_player == false 
 				puts "#{@game.current_player.marker}, please choose a square (1-9)"
 				chosen_box = gets.chomp.to_i
-				puts @game.check_box?(chosen_box)
+				puts @game.check_box(chosen_box)
 			end
 			puts "#{@game.current_player.marker} chose #{chosen_box.to_s}"
 			@game.turn_back_end(chosen_box)
