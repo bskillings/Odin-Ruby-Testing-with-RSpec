@@ -10,6 +10,7 @@ class ConnectFourBackEnd
 		@game_won = false
 	end
 
+	#sets up the hash of holes
 	def create_game_board
 		new_board = {}
 		i = 1
@@ -25,6 +26,7 @@ class ConnectFourBackEnd
 		return new_board
 	end
 
+	#uses @game_board to create a string to pass back to the UI to show
 	def produce_game_board_string
 		game_board_string = " 1  2  3  4  5  6  7 \r\n"
 		@game_board.each do |key, hole|
@@ -40,6 +42,7 @@ class ConnectFourBackEnd
 		return game_board_string
 	end
 
+	#takes the column, performs logic, and returns a string
 	def drop_token(column)
 		y_coordinate = 6
 		hole_to_check = @game_board["#{column}-#{y_coordinate}"]
@@ -52,8 +55,101 @@ class ConnectFourBackEnd
 		end
 		hole_to_check.owned_by_player = @current_player
 		hole_to_check.filled = true
-		@current_player = @current_player == @player_x ? @player_o : @player_x
+		@current_player.holes_owned.push(hole_to_check)
+		check_for_winner
+		if @game_won == false
+			@current_player = @current_player == @player_x ? @player_o : @player_x
+		end
 		return produce_game_board_string
+	end
+
+	def check_for_winner
+		did_player_win = false
+		x = 1
+		while x < 8
+			y = 1
+			while y < 7
+				current_key = "#{x}-#{y}"
+				current_hole = game_board[current_key]
+				@x_to_check = x
+				@y_to_check = y
+				if current_hole.owned_by_player == @current_player
+					did_player_win = check_for_line(x, y)
+					if did_player_win
+						return true
+					end
+				end
+				y += 1
+			end
+			x += 1
+		end
+		return false
+	end
+
+	def check_for_line(original_x, original_y)
+		@direction = 1
+		#while @direction < 9 
+			@line_count = 1
+			if check_next_holes(original_x, original_y)
+				return true
+			end
+		#end
+		return false
+	end
+
+	def check_next_holes(original_x, original_y)
+#		case @direction
+#		puts "testing direction #{@direction}"
+#		puts "testing slot #{original_x}-#{original_y}"
+#		puts "line count #{@line_count}"
+		if @direction == 1
+			x = original_x + 1
+			y = original_y + 0
+		elsif @direction == 2
+			x = original_x + 1
+			y = original_y + 1
+		elsif @direction == 3
+			x = original_x + 0
+			y = original_y + 1
+		elsif @direction == 4
+			x = original_x - 1
+			y = original_y + 1
+		elsif @direction == 5
+			x = original_x - 1
+			y = original_y + 0
+		elsif @direction == 6
+			x = original_x - 1
+			y = original_y - 1
+		elsif @direction == 7
+			x = original_x + 0
+			y = original_y - 1
+		elsif @direction == 8
+			x = original_x + 1
+			y = original_y - 1
+		else
+			x = 0
+		end
+		
+		if x > 0 && x < 8 && y > 0 && y < 7 && @game_won == false
+			new_key = "#{x}-#{y}"
+			if @game_board[new_key].owned_by_player == @current_player
+				@line_count += 1
+				if @line_count == 4
+					@game_won = true
+					return true
+				else
+					return check_next_holes(x, y)
+				end
+			else
+				@direction += 1
+				if @direction > 8
+					return false
+				else
+					@line_count = 1
+					return check_next_holes(@x_to_check, @y_to_check)
+				end
+			end
+		end
 	end
 
 end
@@ -70,9 +166,10 @@ end
 
 class ConnectFourPlayer
 
-	attr_accessor :marker
+	attr_accessor :marker, :holes_owned
 
 	def initialize(marker)
+		@holes_owned = []
 		@marker = marker
 	end
 end
@@ -86,25 +183,27 @@ class ConnectFourFrontEnd
 
 	def play_game
 		puts @game.produce_game_board_string
-		while @game.game_won == false
 			turn_front_end
-		end
 		announce_winner
 	end
 
 	def turn_front_end
-		puts "\r\nPlayer #{@game.current_player.marker}, choose a column"
-		column = gets.chomp
-		while (column.to_i > 7 || column.to_i < 1) || column == ""
-			puts "Player #{@game.current_player.marker}, Please choose a column 1-7"
+		while @game.game_won == false
+			puts "\r\nPlayer #{@game.current_player.marker}, choose a column"
 			column = gets.chomp
+			while (column.to_i > 7 || column.to_i < 1) || column == ""
+				puts "Player #{@game.current_player.marker}, Please choose a column 1-7"
+				column = gets.chomp
+			end
+		
+			puts @game.drop_token(column)
 		end
-	
-		puts @game.drop_token(column)
 	end
 
 	def announce_winner
-
+		puts "\r\nWe have a winner!"
+		#puts @game.produce_game_board_string
+		puts "#{@game.current_player.marker} won!"
 	end
 
 
@@ -114,3 +213,7 @@ end
 #test_game = ConnectFourFrontEnd.new
 #i separated the front end and back end, but should I be using mocks and stubs instead?
 #I really don't understand them.
+
+#nov 18, saying wrong person won, only catching sideways lines
+
+#nov 19, catches winners manually but not through rspec

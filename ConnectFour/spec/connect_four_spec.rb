@@ -61,17 +61,24 @@ describe ConnectFourBackEnd do
 
 		end
 
-		it "checks for four matches" 
-	
 	end
 
 	context "at the end" do
 
-		it "four in a row triggers a win" do
+		it "four in a horizontal row triggers a win" do
 			@c4.game_board["1-6"].owned_by_player = @c4.player_x
 			@c4.game_board["2-6"].owned_by_player = @c4.player_x
 			@c4.game_board["3-6"].owned_by_player = @c4.player_x
 			@c4.drop_token(4)
+			expect(@c4.game_won).to eq true
+		end
+
+		#this will pass manually, so I think the test is wrong?
+		it "four in a vertical row triggers a win" do
+			@c4.game_board["1-6"].owned_by_player = @c4.player_x
+			@c4.game_board["1-5"].owned_by_player = @c4.player_x
+			@c4.game_board["1-4"].owned_by_player = @c4.player_x
+			@c4.drop_token(1)
 			expect(@c4.game_won).to eq true
 		end
 
