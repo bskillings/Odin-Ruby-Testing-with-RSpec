@@ -63,6 +63,7 @@ class ConnectFourBackEnd
 		return produce_game_board_string
 	end
 
+	#goes holy by hole, triggers checking in lines
 	def check_for_winner
 		did_player_win = false
 		x = 1
@@ -86,22 +87,18 @@ class ConnectFourBackEnd
 		return false
 	end
 
+	#checks for four in a row from given hole
 	def check_for_line(original_x, original_y)
 		@direction = 1
-		#while @direction < 9 
 			@line_count = 1
 			if check_next_holes(original_x, original_y)
 				return true
 			end
-		#end
 		return false
 	end
 
+	#recursive, identifying owner and going on if owner is the same
 	def check_next_holes(original_x, original_y)
-#		case @direction
-#		puts "testing direction #{@direction}"
-#		puts "testing slot #{original_x}-#{original_y}"
-#		puts "line count #{@line_count}"
 		if @direction == 1
 			x = original_x + 1
 			y = original_y + 0
@@ -156,6 +153,7 @@ end
 
 class ConnectFourLocation
 
+	#Referred to as holes
 	attr_accessor :owned_by_player, :filled
 
 	def initialize
@@ -176,17 +174,20 @@ end
 
 class ConnectFourFrontEnd
 
+	#Separates input/ output from logic
 	def initialize
 		@game = ConnectFourBackEnd.new	
 		play_game	
 	end
 
+	#bookends game
 	def play_game
 		puts @game.produce_game_board_string
-			turn_front_end
+		turn_front_end
 		announce_winner
 	end
 
+	#gets input from player
 	def turn_front_end
 		while @game.game_won == false
 			puts "\r\nPlayer #{@game.current_player.marker}, choose a column"
@@ -200,9 +201,9 @@ class ConnectFourFrontEnd
 		end
 	end
 
+	#outputs winner message
 	def announce_winner
 		puts "\r\nWe have a winner!"
-		#puts @game.produce_game_board_string
 		puts "#{@game.current_player.marker} won!"
 	end
 
@@ -211,9 +212,3 @@ end
 
 
 #test_game = ConnectFourFrontEnd.new
-#i separated the front end and back end, but should I be using mocks and stubs instead?
-#I really don't understand them.
-
-#nov 18, saying wrong person won, only catching sideways lines
-
-#nov 19, catches winners manually but not through rspec
