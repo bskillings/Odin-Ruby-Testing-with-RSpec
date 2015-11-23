@@ -76,8 +76,11 @@ describe ConnectFourBackEnd do
 		#this will pass manually, so I think the test is wrong?
 		it "four in a vertical row triggers a win" do
 			@c4.game_board["1-6"].owned_by_player = @c4.player_x
+			@c4.game_board["1-6"].filled = true
 			@c4.game_board["1-5"].owned_by_player = @c4.player_x
+			@c4.game_board["1-5"].filled = true
 			@c4.game_board["1-4"].owned_by_player = @c4.player_x
+			@c4.game_board["1-4"].filled = true
 			@c4.drop_token(1)
 			expect(@c4.game_won).to eq true
 		end
